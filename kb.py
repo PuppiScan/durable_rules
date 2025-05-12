@@ -1,38 +1,295 @@
-# File: pet_expert/kb.py
+from typing import Dict, List, Any
 
-"""
-KB (Knowledge Base) for pet dermatology:
-- DISEASE_CAUSE_MAPPING: 각 질병별로 원인 식별자(cause key)와
-  그 원인을 유발하는 환경 키워드(trigger keywords) 리스트를 맵핑합니다.
-"""
-
-from typing import Dict, List
-
-# ┌──────────────────────────────────────────────────────┐
-# │ 질병 : {원인 식별자: [유발 환경 키워드,...], ...}  │
-# └──────────────────────────────────────────────────────┘
-DISEASE_CAUSE_MAPPING: Dict[str, Dict[str, List[str]]] = {
-    'folliculitis': {
-        'plastic_bowl_contamination': ['plastic_bowl', 'dirty_water'],
-        'poor_hygiene': ['outdoor', 'unclean_bedding', 'lack_grooming'],
-        'hormonal_imbalance': ['adolescent', 'intact'],
+DISEASE_CAUSE_ENV_MAPPING: Dict[str, Dict[str, Dict[str, List[Any]]]] = {
+    'A1': {
+        'bacterial_infection': {
+            'uses_plastic_bowl':    [True],
+            'season':               ['summer'],
+            'bath_freq_per_month':  [0],
+            'walk_habit':           [4],
+            'sun_exposure':         [1],
+            'living_area':          ['outdoor'],
+            'wash_cycle':           [4],
+        },
+        'fungal_infection': {
+            'uses_plastic_bowl':    [False, True],
+            'season':               ['summer', 'fall'],
+            'bath_freq_per_month':  [0],
+            'walk_habit':           [3],
+            'sun_exposure':         [1],
+            'living_area':          ['outdoor'],
+            'wash_cycle':           [4],
+        },
+        'allergic_dermatitis': {
+            'uses_plastic_bowl':    [False],
+            'season':               ['spring', 'fall'],
+            'bath_freq_per_month':  [0],
+            'walk_habit':           [2],
+            'sun_exposure':         [1],
+            'living_area':          ['indoor'],
+            'wash_cycle':           [4],
+        },
+        'external_parasite': {
+            'uses_plastic_bowl':    [False],
+            'season':               ['spring', 'summer'],
+            'bath_freq_per_month':  [1],
+            'walk_habit':           [4],
+            'sun_exposure':         [2],
+            'living_area':          ['outdoor'],
+            'wash_cycle':           [4],
+        },
+        'contact_dermatitis': {
+            'uses_plastic_bowl':    [False],
+            'season':               ['spring'],
+            'bath_freq_per_month':  [0],
+            'walk_habit':           [3],
+            'sun_exposure':         [2],
+            'living_area':          ['indoor'],
+            'wash_cycle':           [4],
+        },
+        'endocrine_immune_disorder': {
+            'uses_plastic_bowl':    [True],
+            'season':               ['fall'],
+            'bath_freq_per_month':  [2],
+            'walk_habit':           [1],
+            'sun_exposure':         [2],
+            'living_area':          ['indoor'],
+            'wash_cycle':           [4],
+        },
     },
-    'dermatophyte_mycosis': {
-        'contact_with_infected': ['multi_pet_household', 'shelter'],
-        'humid_environment': ['high_humidity', 'poor_ventilation'],
+    'A2': {
+        'infectious_cause': {
+            'uses_plastic_bowl':    [False, True],
+            'season':               ['summer'],
+            'bath_freq_per_month':  [0],
+            'walk_habit':           [4],
+            'sun_exposure':         [1],
+            'living_area':          ['outdoor'],
+            'wash_cycle':           [4],
+        },
+        'allergic_cause': {
+            'uses_plastic_bowl':    [False],
+            'season':               ['spring', 'fall'],
+            'bath_freq_per_month':  [0],
+            'walk_habit':           [2],
+            'sun_exposure':         [1],
+            'living_area':          ['indoor'],
+            'wash_cycle':           [4],
+        },
+        'systemic_disease': {
+            'uses_plastic_bowl':    [False],
+            'season':               ['winter'],
+            'bath_freq_per_month':  [2],
+            'walk_habit':           [1],
+            'sun_exposure':         [2],
+            'living_area':          ['indoor'],
+            'wash_cycle':           [2],
+        },
+        'nutritional_deficiency': {
+            'uses_plastic_bowl':    [False],
+            'season':               ['spring', 'winter'],
+            'bath_freq_per_month':  [3],
+            'walk_habit':           [1],
+            'sun_exposure':         [3],
+            'living_area':          ['indoor'],
+            'wash_cycle':           [3],
+        },
+        'environmental_factor': {
+            'uses_plastic_bowl':    [False, True],
+            'season':               ['summer', 'fall'],
+            'bath_freq_per_month':  [0],
+            'walk_habit':           [4],
+            'sun_exposure':         [1],
+            'living_area':          ['outdoor'],
+            'wash_cycle':           [4],
+        },
     },
-    # TODO: 다른 질병에 대한 매핑을 여기에 추가
+    'A3': {
+        'chronic_inflammatory_skin_disease': {
+            'uses_plastic_bowl':    [False],
+            'season':               ['spring', 'fall'],
+            'bath_freq_per_month':  [1],
+            'walk_habit':           [3],
+            'sun_exposure':         [2],
+            'living_area':          ['indoor'],
+            'wash_cycle':           [2],
+        },
+        'repetitive_physical_irritation': {
+            'uses_plastic_bowl':    [False],
+            'season':               ['summer'],
+            'bath_freq_per_month':  [0],
+            'walk_habit':           [3],
+            'sun_exposure':         [1],
+            'living_area':          ['outdoor'],
+            'wash_cycle':           [4],
+        },
+        'excessive_sun_exposure': {
+            'uses_plastic_bowl':    [False],
+            'season':               ['summer'],
+            'bath_freq_per_month':  [2],
+            'walk_habit':           [1],
+            'sun_exposure':         [4],
+            'living_area':          ['outdoor'],
+            'wash_cycle':           [1],
+        },
+        'chronic_bacterial_dermatitis': {
+            'uses_plastic_bowl':    [True],
+            'season':               ['summer'],
+            'bath_freq_per_month':  [0],
+            'walk_habit':           [4],
+            'sun_exposure':         [1],
+            'living_area':          ['outdoor'],
+            'wash_cycle':           [4],
+        },
+        'endocrine_abnormality': {
+            'uses_plastic_bowl':    [True],
+            'season':               ['fall'],
+            'bath_freq_per_month':  [2],
+            'walk_habit':           [1],
+            'sun_exposure':         [2],
+            'living_area':          ['indoor'],
+            'wash_cycle':           [4],
+        },
+    },
+    'A4': {
+        'allergic_skin_disease': {
+            'uses_plastic_bowl':    [False],
+            'season':               ['spring', 'fall'],
+            'bath_freq_per_month':  [0],
+            'walk_habit':           [2],
+            'sun_exposure':         [1],
+            'living_area':          ['indoor'],
+            'wash_cycle':           [4],
+        },
+        'hormonal_imbalance': {
+            'uses_plastic_bowl':    [True],
+            'season':               ['winter'],
+            'bath_freq_per_month':  [2],
+            'walk_habit':           [1],
+            'sun_exposure':         [2],
+            'living_area':          ['indoor'],
+            'wash_cycle':           [1],
+        },
+        'parasitic_infection': {
+            'uses_plastic_bowl':    [False],
+            'season':               ['spring', 'summer'],
+            'bath_freq_per_month':  [1],
+            'walk_habit':           [4],
+            'sun_exposure':         [2],
+            'living_area':          ['outdoor'],
+            'wash_cycle':           [4],
+        },
+        'skin_trauma_and_irritation': {
+            'uses_plastic_bowl':    [False],
+            'season':               ['summer'],
+            'bath_freq_per_month':  [0],
+            'walk_habit':           [3],
+            'sun_exposure':         [2],
+            'living_area':          ['outdoor'],
+            'wash_cycle':           [4],
+        },
+        'skin_folds_moist_environment': {
+            'uses_plastic_bowl':    [False],
+            'season':               ['summer'],
+            'bath_freq_per_month':  [0],
+            'walk_habit':           [4],
+            'sun_exposure':         [1],
+            'living_area':          ['outdoor'],
+            'wash_cycle':           [4],
+        },
+    },
+    'A5': {
+        'bacterial_infection': {
+            'uses_plastic_bowl':    [True],
+            'season':               ['summer'],
+            'bath_freq_per_month':  [0],
+            'walk_habit':           [4],
+            'sun_exposure':         [1],
+            'living_area':          ['outdoor'],
+            'wash_cycle':           [4],
+        },
+        'autoimmune_dermatitis': {
+            'uses_plastic_bowl':    [False],
+            'season':               ['spring', 'fall'],
+            'bath_freq_per_month':  [0],
+            'walk_habit':           [2],
+            'sun_exposure':         [1],
+            'living_area':          ['indoor'],
+            'wash_cycle':           [4],
+        },
+        'traumatic_injury': {
+            'uses_plastic_bowl':    [False],
+            'season':               ['summer'],
+            'bath_freq_per_month':  [0],
+            'walk_habit':           [3],
+            'sun_exposure':         [2],
+            'living_area':          ['outdoor'],
+            'wash_cycle':           [2],
+        },
+        'chemical_irritant_exposure': {
+            'uses_plastic_bowl':    [False],
+            'season':               ['spring'],
+            'bath_freq_per_month':  [0],
+            'walk_habit':           [3],
+            'sun_exposure':         [2],
+            'living_area':          ['indoor'],
+            'wash_cycle':           [4],
+        },
+        'vascular_compromise': {
+            'uses_plastic_bowl':    [False],
+            'season':               ['winter'],
+            'bath_freq_per_month':  [1],
+            'walk_habit':           [1],
+            'sun_exposure':         [2],
+            'living_area':          ['indoor'],
+            'wash_cycle':           [3],
+        },
+    },
+    'A6': {
+        'neoplastic_cause': {
+            'uses_plastic_bowl':    [True],
+            'season':               ['summer'],
+            'bath_freq_per_month':  [2],
+            'walk_habit':           [1],
+            'sun_exposure':         [4],
+            'living_area':          ['outdoor'],
+            'wash_cycle':           [1],
+        },
+        'infection_cuase': {
+            'uses_plastic_bowl':    [True],
+            'season':               ['summer'],
+            'bath_freq_per_month':  [0],
+            'walk_habit':           [4],
+            'sun_exposure':         [1],
+            'living_area':          ['outdoor'],
+            'wash_cycle':           [4],
+        },
+        'autoimmune_cause': {
+            'uses_plastic_bowl':    [False],
+            'season':               ['spring', 'fall'],
+            'bath_freq_per_month':  [0],
+            'walk_habit':           [2],
+            'sun_exposure':         [1],
+            'living_area':          ['indoor'],
+            'wash_cycle':           [4],
+        },
+        'parasitic_cause': {
+            'uses_plastic_bowl':    [False],
+            'season':               ['spring', 'summer'],
+            'bath_freq_per_month':  [1],
+            'walk_habit':           [4],
+            'sun_exposure':         [2],
+            'living_area':          ['outdoor'],
+            'wash_cycle':           [4],
+        },
+        'traumatic_cause': {
+            'uses_plastic_bowl':    [False],
+            'season':               ['summer'],
+            'bath_freq_per_month':  [0],
+            'walk_habit':           [3],
+            'sun_exposure':         [2],
+            'living_area':          ['outdoor'],
+            'wash_cycle':           [2],
+        },
+    },
 }
-
-def get_causes_for(diagnosis: str) -> Dict[str, List[str]]:
-    """
-    주어진 diagnosis(질병) 에 대해 가능한 원인 식별자와
-    해당 원인을 유발하는 환경 키워드 리스트를 반환합니다.
-    """
-    return DISEASE_CAUSE_MAPPING.get(diagnosis, {})
-
-def list_supported_diseases() -> List[str]:
-    """
-    KB에 정의된 모든 질병명을 반환합니다.
-    """
-    return list(DISEASE_CAUSE_MAPPING.keys())
